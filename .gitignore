@@ -1,0 +1,11 @@
+venv/
+.env
+credentials/
+*.pyc
+__pycache__/
+.pytest_cache/
+airflow/logs/
+airflow/plugins/
+data/raw/
+*.db
+*.sqlite

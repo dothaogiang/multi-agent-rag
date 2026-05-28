@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: travel_rag_qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    container_name: travel_rag_postgres
+    environment:
+      POSTGRES_USER: travel_user
+      POSTGRES_PASSWORD: travel_pass
+      POSTGRES_DB: travel_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_storage:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: travel_rag_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@travel.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  qdrant_storage:
+  postgres_storage:

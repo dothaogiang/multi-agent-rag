@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "travel-rag-assistant"
+version = "0.1.0"
+description = "Multi-Agent RAG system for travel customer support"
+authors = ["Your Name <your@email.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain = "^0.3"
+langchain-openai = "^0.2"
+langgraph = "^0.2"
+qdrant-client = "^1.11"
+google-cloud-storage = "^2.18"
+google-cloud-bigquery = "^3.25"
+apache-airflow = {version = "^2.10", extras = ["google"]}
+openai = "^1.54"
+python-dotenv = "^1.0"
+pydantic = "^2.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+black = "^24.0"
+ruff = "^0.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
