@@ -2,8 +2,7 @@ import os
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.messages import ToolMessage
-from agents.state import State
+from langchain_core.tools import tool
 
 load_dotenv("/workspaces/multi-agent-rag/.env")
 
@@ -14,31 +13,65 @@ def get_llm():
         temperature=0,
     )
 
+# ── Handoff tools — để router chuyển sang specialized agent ──
+
+@tool
+def to_flight_assistant() -> str:
+    """Transfer to the flight booking assistant for flight searches
+    and flight booking updates."""
+    return "Transferring to flight assistant."
+
+@tool
+def to_hotel_assistant() -> str:
+    """Transfer to the hotel booking assistant for hotel searches
+    and hotel reservations."""
+    return "Transferring to hotel assistant."
+
+@tool
+def to_car_rental_assistant() -> str:
+    """Transfer to the car rental assistant for car rental searches
+    and car reservations."""
+    return "Transferring to car rental assistant."
+
+@tool
+def to_excursion_assistant() -> str:
+    """Transfer to the excursion assistant for trip recommendations,
+    landmarks, activities, and things to do."""
+    return "Transferring to excursion assistant."
+
+# ── Primary assistant prompt ──────────────────────────────────
+
 PRIMARY_PROMPT = ChatPromptTemplate.from_messages([
     (
         "system",
-        """You are a travel customer support assistant for a specific travel database.
+        """You are a travel customer support router.
+Your job is to understand the user's intent and delegate to the 
+right specialized assistant.
 
-STRICT RULES — FOLLOW EXACTLY:
-1. You MUST call a tool before answering ANY question about destinations, 
-   hotels, flights, car rentals, or activities.
-2. NEVER mention any place, hotel, flight, or attraction that was NOT 
-   returned by a tool. Not Lake Geneva, not Mount Pilatus, nothing.
-3. If search_trip_recommendations returns results, use ONLY those results.
-4. If search_trip_recommendations returns "No trip recommendations found",
-   say exactly: "I don't have any recommendations matching that request 
-   in our database."
-5. Do NOT add suggestions, alternatives, or extra information from your 
-   own knowledge. Only tool results.
+ROUTING RULES — STRICT:
+- Flights (search, update, booking status) → to_flight_assistant
+- Hotels (search, book, availability)       → to_hotel_assistant  
+- Car rentals (search, reserve)             → to_car_rental_assistant
+- Activities, landmarks, things to do       → to_excursion_assistant
 
-Current passenger info:
-{user_info}
+IMPORTANT:
+- ALWAYS delegate. Never answer travel questions yourself.
+- If the request covers multiple topics (hotel + car), delegate to
+  the first one, then the user can ask about the second.
+- For non-travel questions, respond politely and redirect.
 
+Current passenger: {user_info}
 Current time: {time}""",
     ),
     ("placeholder", "{messages}"),
 ])
 
-def create_primary_assistant(tools: list):
-    llm = get_llm()
-    return PRIMARY_PROMPT | llm.bind_tools(tools)
+HANDOFF_TOOLS = [
+    to_flight_assistant,
+    to_hotel_assistant,
+    to_car_rental_assistant,
+    to_excursion_assistant,
+]
+
+def create_primary_assistant():
+    return PRIMARY_PROMPT | get_llm().bind_tools(HANDOFF_TOOLS)

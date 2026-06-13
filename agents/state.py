@@ -3,5 +3,7 @@ from langgraph.graph.message import AnyMessage, add_messages
 from typing_extensions import TypedDict
 
 class State(TypedDict):
-    messages: Annotated[list[AnyMessage], add_messages]
-    user_info: str        # thông tin passenger hiện tại
+    messages:  Annotated[list[AnyMessage], add_messages]
+    user_info: str
+    # Track agent hiện tại đang active
+    active_agent: str
