@@ -1,6 +1,11 @@
 from sqlalchemy import text
 from langchain_core.tools import tool
 from tools.safe_tools import get_engine
+from tools.base import handle_tool_error
+from tools.safe_tools import (
+    search_flights as _safe_search_flights,
+    search_hotels as _safe_search_hotels,
+)
 
 @tool
 def book_hotel(hotel_id: int) -> str:
@@ -61,3 +66,17 @@ def update_flight(ticket_no: str, new_flight_id: int) -> str:
         )
     engine.dispose()
     return f"Flight updated to {result.flight_no} for ticket {ticket_no}."
+
+@tool
+@handle_tool_error
+def search_flights(departure_airport: str, arrival_airport: str, limit: int = 5) -> str:
+    """Search available flights between two airports (proxy to safe_tools)."""
+    # Proxy to the implementation in safe_tools
+    return _safe_search_flights(departure_airport, arrival_airport, limit)
+
+@tool
+@handle_tool_error
+def search_hotels(location: str, limit: int = 5) -> str:
+    """Search available hotels in a given location (proxy to safe_tools)."""
+    # Proxy to the implementation in safe_tools
+    return _safe_search_hotels(location, limit)

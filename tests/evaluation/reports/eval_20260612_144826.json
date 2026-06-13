@@ -1,0 +1,162 @@
+{
+  "timestamp": "2026-06-12T14:48:26",
+  "retrieval": {
+    "avg_recall": 0.7666666666666667,
+    "avg_precision": 0.95,
+    "avg_latency": 0.5412874698638916,
+    "details": [
+      {
+        "query": "What historic landmarks can I visit in Basel?",
+        "recall": 1.0,
+        "precision": 1.0,
+        "f1": 0.9999999995,
+        "latency": 0.5602130889892578,
+        "response": "- Basel Minster (Basel)\n  Keywords: landmark, history\n  Visit the historic Basel Minster, a beautifu..."
+      },
+      {
+        "query": "I want to visit an art museum",
+        "recall": 1.0,
+        "precision": 1.0,
+        "f1": 0.9999999995,
+        "latency": 0.4813499450683594,
+        "response": "- Kunstmuseum Basel (Basel)\n  Keywords: art, museum\n  Explore the extensive art collection at the Ku..."
+      },
+      {
+        "query": "Where can I learn about Swiss history?",
+        "recall": 1.0,
+        "precision": 0.5,
+        "f1": 0.6666666662222221,
+        "latency": 0.497753381729126,
+        "response": "- Swiss National Museum (Zurich)\n  Keywords: history, museum\n  Learn about Swiss history and culture..."
+      },
+      {
+        "query": "Show me nature activities",
+        "recall": 0.6666666666666666,
+        "precision": 1.0,
+        "f1": 0.79999999952,
+        "latency": 0.5988056659698486,
+        "response": "- Mount Pilatus (Lucerne)\n  Keywords: nature, mountain\n  Take a cable car ride to the top of Mount P..."
+      },
+      {
+        "query": "I want to see a cathedral or church",
+        "recall": 0.6666666666666666,
+        "precision": 1.0,
+        "f1": 0.79999999952,
+        "latency": 0.534940242767334,
+        "response": "- Bern Cathedral (Bern)\n  Keywords: landmark, history\n  Visit the impressive Bern Cathedral, a stunn..."
+      },
+      {
+        "query": "Things to do in Zurich",
+        "recall": 1.0,
+        "precision": 1.0,
+        "f1": 0.9999999995,
+        "latency": 0.6716716289520264,
+        "response": "- Zurich Old Town (Zurich)\n  Keywords: history, architecture\n  Take a stroll through the charming st..."
+      },
+      {
+        "query": "Best place for architecture lovers",
+        "recall": 1.0,
+        "precision": 1.0,
+        "f1": 0.9999999995,
+        "latency": 0.4632701873779297,
+        "response": "- Zurich Old Town (Zurich)\n  Keywords: history, architecture\n  Take a stroll through the charming st..."
+      },
+      {
+        "query": "Medieval buildings and castles",
+        "recall": 0.3333333333333333,
+        "precision": 1.0,
+        "f1": 0.49999999962499997,
+        "latency": 0.5399022102355957,
+        "response": "- Bern Cathedral (Bern)\n  Keywords: landmark, history\n  Visit the impressive Bern Cathedral, a stunn..."
+      },
+      {
+        "query": "Cultural experiences in Switzerland",
+        "recall": 1.0,
+        "precision": 1.0,
+        "f1": 0.9999999995,
+        "latency": 0.5847134590148926,
+        "response": "- Swiss National Museum (Zurich)\n  Keywords: history, museum\n  Learn about Swiss history and culture..."
+      },
+      {
+        "query": "Outdoor sightseeing spots",
+        "recall": 0.0,
+        "precision": 1.0,
+        "f1": 0.0,
+        "latency": 0.4802548885345459,
+        "response": "- Lake Geneva (Geneva)\n  Keywords: nature, lake\n  Enjoy stunning views of Lake Geneva and the surrou..."
+      }
+    ]
+  },
+  "sql": {
+    "accuracy": 1.0,
+    "avg_latency": 0.033387613296508786,
+    "details": [
+      {
+        "query": "Find hotels in Basel",
+        "correct": true,
+        "latency": 0.07898712158203125
+      },
+      {
+        "query": "Find hotels in Zurich",
+        "correct": true,
+        "latency": 0.02161431312561035
+      },
+      {
+        "query": "Search car rentals in Lucerne",
+        "correct": true,
+        "latency": 0.017013072967529297
+      },
+      {
+        "query": "Find flights from BSL to MCO",
+        "correct": true,
+        "latency": 0.025269269943237305
+      },
+      {
+        "query": "Find flights from HAM to OSL",
+        "correct": true,
+        "latency": 0.024054288864135742
+      }
+    ]
+  },
+  "routing": {
+    "accuracy": 1.0,
+    "avg_latency": 3.4035390853881835,
+    "details": [
+      {
+        "query": "What can I visit in Basel?",
+        "expected": "search_trip_recommendations",
+        "actual": "search_trip_recommendations",
+        "correct": true,
+        "latency": 3.3612356185913086
+      },
+      {
+        "query": "Find me a hotel in Zurich",
+        "expected": "search_hotels",
+        "actual": "search_hotels",
+        "correct": true,
+        "latency": 3.0690927505493164
+      },
+      {
+        "query": "I need a car rental in Basel",
+        "expected": "search_car_rentals",
+        "actual": "search_car_rentals",
+        "correct": true,
+        "latency": 3.351240634918213
+      },
+      {
+        "query": "Search flights from ZRH to FRA",
+        "expected": "search_flights",
+        "actual": "search_flights",
+        "correct": true,
+        "latency": 3.0564541816711426
+      },
+      {
+        "query": "Tell me about art museums",
+        "expected": "search_trip_recommendations",
+        "actual": "search_trip_recommendations",
+        "correct": true,
+        "latency": 4.1796722412109375
+      }
+    ]
+  }
+}

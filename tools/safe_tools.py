@@ -6,6 +6,9 @@ from google import genai
 from google.genai import types
 from qdrant_client import QdrantClient
 from langchain_core.tools import tool
+from tools.base import handle_tool_error
+from sqlalchemy import create_engine, event
+from sqlalchemy.pool import QueuePool
 
 load_dotenv("/workspaces/multi-agent-rag/.env")
 
@@ -13,9 +16,6 @@ POSTGRES_URL    = os.getenv("POSTGRES_URL",
     "postgresql://travel_user:travel_pass@localhost:5432/travel_db")
 GOOGLE_API_KEY  = os.getenv("GOOGLE_API_KEY")
 COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "travel_policies")
-
-def get_engine():
-    return create_engine(POSTGRES_URL)
 
 def get_qdrant():
     return QdrantClient(host="localhost", port=6333)
@@ -26,6 +26,7 @@ def get_genai():
 # ── Flight tools ──────────────────────────────────────────────
 
 @tool
+@handle_tool_error
 def search_flights(
     departure_airport: str,
     arrival_airport: str,
@@ -61,6 +62,7 @@ def search_flights(
     return df.to_string(index=False)
 
 @tool
+@handle_tool_error
 def lookup_passenger(passenger_id: str) -> str:
     """Look up flight info by ticket number or flight number."""
     engine = get_engine()
@@ -85,6 +87,7 @@ def lookup_passenger(passenger_id: str) -> str:
     return df.to_string(index=False)
 
 @tool
+@handle_tool_error
 def search_hotels(location: str, limit: int = 5) -> str:
     """Search available hotels in a given location."""
     engine = get_engine()
@@ -108,6 +111,7 @@ def search_hotels(location: str, limit: int = 5) -> str:
 
 
 @tool
+@handle_tool_error
 def search_car_rentals(location: str, limit: int = 5) -> str:
     """Search available car rentals in a given location."""
     engine = get_engine()
@@ -131,6 +135,7 @@ def search_car_rentals(location: str, limit: int = 5) -> str:
 
 
 @tool
+@handle_tool_error
 def search_trip_recommendations(query: str, limit: int = 3) -> str:
     """Search trip recommendations and excursions using semantic search."""
     genai_client = get_genai()
@@ -159,3 +164,15 @@ def search_trip_recommendations(query: str, limit: int = 3) -> str:
             f"  {r.payload['details']}"
         )
     return "\n\n".join(output)
+
+
+def get_engine():
+    """Engine với connection pool và retry."""
+    return create_engine(
+        POSTGRES_URL,
+        poolclass=QueuePool,
+        pool_size=5,
+        pool_timeout=10,
+        pool_pre_ping=True,   # ← test connection trước khi dùng
+        connect_args={"connect_timeout": 5},
+    )
