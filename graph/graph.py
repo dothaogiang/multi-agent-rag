@@ -135,15 +135,19 @@ def create_entry_node(agent_name: str, tool_name: str):
     return entry_node
 
 def route_specialized(state: State):
-    """Router: specialized agent → tools / human_review / primary."""
     last = state["messages"][-1]
     if not hasattr(last, "tool_calls") or not last.tool_calls:
         return END
-    tool_name = last.tool_calls[0]["name"]
-    if tool_name == "leave_skill":
+    
+    # Check tất cả tool calls — nếu có sensitive tool → human_review
+    for tc in last.tool_calls:
+        if tc["name"] in SENSITIVE_TOOL_NAMES:
+            return "human_review"
+    
+    # Check leave_skill
+    if last.tool_calls[0]["name"] == "leave_skill":
         return "primary_assistant"
-    if tool_name in SENSITIVE_TOOL_NAMES:
-        return "human_review"
+    
     return "tools"
 
 def create_tool_node_with_fallback(tools: list) -> ToolNode:
@@ -254,8 +258,26 @@ def build_graph():
 graph = build_graph()
 
 
+def get_response(result):
+    for msg in reversed(result["messages"]):
+        if msg.__class__.__name__ != "AIMessage":
+            continue
+        content = msg.content
+        if isinstance(content, list):
+            text = " ".join(
+                block.get("text","")
+                for block in content
+                if isinstance(block, dict) and block.get("type") == "text"
+            )
+        elif isinstance(content, str):
+            text = content
+        else:
+            continue
+        if text.strip():
+            return text
+    return "(no response)"
+
 def get_active_agent(result):
-    """Lấy agent cuối cùng thật sự xử lý query — bỏ qua primary."""
     agent_map = {
         "to_flight_assistant":     "flight",
         "to_hotel_assistant":      "hotel",
@@ -268,6 +290,7 @@ def get_active_agent(result):
                 if tc["name"] in agent_map:
                     return agent_map[tc["name"]]
     return "primary"
+
 
 # ── Test ──────────────────────────────────────────────────────
 
