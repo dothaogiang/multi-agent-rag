@@ -35,20 +35,47 @@ RETRIEVAL_TEST_CASES = [
         "expected_keywords": ["architecture", "historic"],
         "relevant_locations": ["Zurich", "Bern"],
     },
-    {
+   {
     "query": "Medieval buildings and castles",
-    "expected_keywords": ["historic", "Basel", "Bern"],
-    "relevant_locations": ["Basel", "Bern"],
+    "expected_keywords": ["Spalentor", "Old Town", "Bern"],
+    "relevant_locations": ["Basel", "Lucerne", "Bern"],
 },
     {
         "query": "Cultural experiences in Switzerland",
         "expected_keywords": ["museum", "culture", "art"],
         "relevant_locations": [],
     },
-    {
+   {
     "query": "Outdoor sightseeing spots",
-    "expected_keywords": ["Lake", "Pilatus", "Lucerne"],
-    "relevant_locations": ["Geneva", "Lucerne"],
+    "expected_keywords": ["Lake", "Mount", "Pilatus"],
+    "relevant_locations": ["Lucerne", "Zurich", "Geneva"],
+},
+
+# Thêm vào cuối RETRIEVAL_TEST_CASES
+{
+    "query": "Science and technology museums",
+    "expected_keywords": ["CERN", "Transport", "Einstein"],
+    "relevant_locations": ["Geneva", "Lucerne", "Bern"],
+},
+{
+    "query": "I want to go skiing or see snow",
+    "expected_keywords": ["Jungfraujoch", "Pilatus", "Interlaken"],
+    "relevant_locations": ["Interlaken", "Lucerne"],
+},
+{
+    "query": "Boat trip on a lake",
+    "expected_keywords": ["Lake", "boat", "scenic"],
+    "relevant_locations": ["Zurich", "Geneva", "Lucerne"],
+},
+{
+    "query": "Adventure sports and activities",
+    "expected_keywords": ["Paragliding", "Interlaken", "adventure"],
+    "relevant_locations": ["Interlaken"],
+},
+{
+    "query": "UNESCO World Heritage sites",
+    "expected_keywords": ["Bern", "St. Gallen", "UNESCO"],
+    "relevant_locations": ["Bern", "St. Gallen"],
 },
 ]
 
@@ -91,27 +118,27 @@ AGENT_TEST_CASES = [
     {
         "query": "What can I visit in Basel?",
         "type": "rag",
-        "expected_tool": "search_trip_recommendations",
+        "expected_tool": "to_excursion_assistant",  # ← đổi
     },
     {
         "query": "Find me a hotel in Zurich",
         "type": "sql",
-        "expected_tool": "search_hotels",
+        "expected_tool": "to_hotel_assistant",       # ← đổi
     },
     {
         "query": "I need a car rental in Basel",
         "type": "sql",
-        "expected_tool": "search_car_rentals",
+        "expected_tool": "to_car_rental_assistant",  # ← đổi
     },
     {
         "query": "Search flights from ZRH to FRA",
         "type": "sql",
-        "expected_tool": "search_flights",
+        "expected_tool": "to_flight_assistant",      # ← đổi
     },
     {
         "query": "Tell me about art museums",
         "type": "rag",
-        "expected_tool": "search_trip_recommendations",
+        "expected_tool": "to_excursion_assistant",   # ← đổi
     },
 ]
 
@@ -133,3 +160,4 @@ HALLUCINATION_TEST_CASES = [
         "description": "Ski resorts không có trong DB",
     },
 ]
+
